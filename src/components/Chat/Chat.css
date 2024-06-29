@@ -1,0 +1,19 @@
+.chat {
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+}
+
+.chat-messages {
+  height: 80vh;
+  overflow: scroll;
+  border: 1px rgb(0, 128, 128) solid;
+  padding: 10px;
+}
+
+.message-input-form-container {
+  height: 10vh;
+  bottom: 0;
+  position: fixed;
+  width: 100%;
+}

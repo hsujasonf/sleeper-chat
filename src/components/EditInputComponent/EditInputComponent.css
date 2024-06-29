@@ -1,0 +1,15 @@
+.edit-input-component {
+  width: 100%;
+}
+
+.edit-input-component-button {
+  margin-left: 5px;
+  color: rgb(0, 128, 128);
+  background-color: black;
+  border: none;
+}
+
+.edit-input-component-input {
+  width: 50%;
+  height: 30px;
+}

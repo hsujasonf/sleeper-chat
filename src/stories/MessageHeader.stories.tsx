@@ -1,12 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
-import Message from "../components/Message/Message";
-import { ChatMessage } from "../types";
+
+import MessageHeader from "../components/MessageHeader/MessageHeader";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
-  title: "Example/Message",
-  component: Message,
+  title: "Example/MessageHeader",
+  component: MessageHeader,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
     layout: "centered",
@@ -14,7 +13,7 @@ const meta = {
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ["autodocs"],
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
-} satisfies Meta<typeof Message>;
+} satisfies Meta<typeof MessageHeader>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -22,10 +21,8 @@ type Story = StoryObj<typeof meta>;
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Primary: Story = {
   args: {
-    message: {
-      userId: "123",
-      text: "this is a story",
-      timestamp: new Date("Wed Jun 26 2024 16:40:41 GMT-07"),
-    },
+    avatar:
+      "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1102.jpg",
+    name: "Jason Hsu",
   },
 };

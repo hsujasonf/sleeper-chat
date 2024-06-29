@@ -5,14 +5,21 @@ export interface User {
 }
 
 export interface ChatMessage {
+  id: string;
   userId: User["id"];
-  name: User["name"];
   text: string;
   timestamp: Date;
+  responses?: ChatMessage[];
+  likedBy?: User["id"][];
 }
 
 export interface ChatThread {
   id: string;
-  user: User["name"];
-  messages: ChatMessage[];
+  users: User[];
+  messageGroups: GroupedMessages[];
+}
+
+export interface GroupedMessages {
+  user: User;
+  messages: { text: string; timestamp: Date }[];
 }

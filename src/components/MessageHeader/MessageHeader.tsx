@@ -1,18 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { mockData } from "../../mockData";
+import React from "react";
+import { User, ChatMessage } from "../../types";
+import { Avatar } from "@mui/material";
+import "./MessageHeader.css";
 
-interface MessageProps {
-  text: string;
-  timestamp: string;
+interface MessageHeaderProps {
+  user: User;
 }
 
-const Message: React.FC<MessageProps> = ({ text, timestamp }) => {
+const MessageHeader: React.FC<MessageHeaderProps> = ({ user }) => {
+  const { name, avatar } = user;
   return (
-    <div>
-      <div>{timestamp}</div>
-      <div>{text}</div>
+    <div className="message-header">
+      <div>
+        <Avatar src={avatar} />
+      </div>
+      <div>
+        <h4>{name}</h4>
+      </div>
     </div>
   );
 };
 
-export default Message;
+export default MessageHeader;
