@@ -1,5 +1,7 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import "./EditInputComponent.css";
+
+// input component for editing messages
 interface EditInputComponentProps {
   value: string;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -12,6 +14,7 @@ const EditInputComponent: React.FC<EditInputComponentProps> = ({
   handleChange,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     if (inputRef.current) {
@@ -19,14 +22,31 @@ const EditInputComponent: React.FC<EditInputComponentProps> = ({
     }
   }, []);
 
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    //hanlde error if the input is empty
+    if (value.trim() === "") {
+      setError("Input cannot be empty.");
+    } else {
+      setError("");
+      handleSubmit(e);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError(""); // Clear error when user starts typing
+    handleChange(e);
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="edit-input-component">
+    <form onSubmit={handleFormSubmit} className="edit-input-component">
       <input
         ref={inputRef}
         value={value}
-        onChange={handleChange}
+        onChange={handleInputChange}
         className="edit-input-component-input"
       />
+      {error && <div className="edit-input-component-error">{error}</div>}
       <button type="submit" className="edit-input-component-button">
         Submit
       </button>

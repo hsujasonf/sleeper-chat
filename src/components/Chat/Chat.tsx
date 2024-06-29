@@ -1,65 +1,63 @@
-import React, { useState, useEffect, useRef } from "react";
-import { generateChat, mockOtherUsers, self } from "../../mockData";
-import { ChatMessage, User } from "../../types";
+import React, { useEffect, useRef, useState } from "react";
+import { useChatContext } from "../../context/ChatProvider";
 import MessageHeader from "../MessageHeader/MessageHeader";
 import Message from "../Message/Message";
 import MessageInputForm from "../MessageInputForm/MessageInputForm";
+import { userInfo, generateRandomMessageFromOtherUser } from "../../dataUtils";
+import { ChatMessage } from "../../types";
 import "./Chat.css";
 
-interface UsersObject {
-  [key: string]: User;
-}
+const getRandomNumberOfSeconds = () => Math.floor(Math.random() * 10000) + 5000;
 
 const Chat: React.FC = () => {
-  const mockUsers = [...mockOtherUsers, self];
-  const chat = generateChat(mockUsers, 500);
-
-  const [messages, setMessages] = useState<{ [key: string]: ChatMessage }>(
-    chat.messages
-  );
-  const [order, setOrder] = useState<string[]>(chat.order);
-  const usersObj: UsersObject = {};
-
+  const { messages, order, users, setMessages, setOrder } = useChatContext();
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const [prevMessageCount, setPrevMessageCount] = useState(order.length);
+  const [initialRender, setInitialRender] = useState(true);
 
   useEffect(() => {
-    // Scroll to the bottom whenever messages change
-    messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
-  }, [messages]);
+    // on inital render or when the chat is updated, scroll down to the most recent message.
+    if (initialRender || order.length !== prevMessageCount) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
+      setPrevMessageCount(order.length);
+      setInitialRender(false);
+    }
 
-  for (let i = 0; i < mockUsers.length; i++) {
-    usersObj[mockUsers[i].id] = mockUsers[i];
-  }
+    const intervalDuration = getRandomNumberOfSeconds();
+    const id = setInterval(() => {
+      // add a random message from another user every 5 - 15 seconds
+      let randomMessage = generateRandomMessageFromOtherUser();
+      // add new message and add the id to the order
+      setMessages((prevMessages: { [key: string]: ChatMessage }) => ({
+        ...prevMessages,
+        [randomMessage.id]: randomMessage,
+      }));
+      setOrder((prevOrder: string[]) => [...prevOrder, randomMessage.id]);
+    }, intervalDuration);
 
-  const [users] = useState(usersObj);
+    return () => clearInterval(id);
+  }, [order.length, prevMessageCount, initialRender]);
 
   return (
     <div className="chat">
+      <h3 className="chat-header">Sleeper Chat</h3>
       <div className="chat-messages">
-        {order.map((id, i) => {
+        {order.map((id: string, i: number) => {
+          // only renders header if its the first message in the chat or if its a new person responding.
           const message = messages[id];
-          let prevId = i > 0 && messages[order[i - 1]].userId;
+          const prevId = i > 0 && messages[order[i - 1]].userId;
           const renderHeader = i === 0 || prevId !== message.userId;
           return (
-            <>
+            <div key={id}>
               {renderHeader && <MessageHeader user={users[message.userId]} />}
-              <Message
-                message={message}
-                ownUserInfo={self}
-                setMessages={setMessages}
-                setOrder={setOrder}
-              />
-            </>
+              <Message message={message} ownUserInfo={users[userInfo.id]} />
+            </div>
           );
         })}
         <div ref={messagesEndRef} />
       </div>
-      <div className="message-input-form-container ">
-        <MessageInputForm
-          setMessages={setMessages}
-          setOrder={setOrder}
-          user={self}
-        />
+      <div className="message-input-form-container">
+        <MessageInputForm user={userInfo} />
       </div>
     </div>
   );
