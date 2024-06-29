@@ -62,7 +62,7 @@ const Message: React.FC<MessageProps> = ({ message, ownUserInfo }) => {
               {message.text}
               {isImageUrl(message.text) && (
                 <div className="image-preview">
-                  <img src={message.text} alt="Image preview" />
+                  <img src={message.text} alt="Image preview"  className="image"/>
                 </div>
               )}
             </div>

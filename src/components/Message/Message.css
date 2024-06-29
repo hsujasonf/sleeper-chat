@@ -36,3 +36,8 @@
 .hover-option:hover {
   color: rgb(0, 128, 128);
 }
+
+.image{
+    width: 200px;
+    height:200px
+}
